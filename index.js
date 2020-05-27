@@ -324,6 +324,7 @@ function parseModule(m) {
     depth: m.depth,
     issuers: m.reasons
     // Stats.js filters out modules only https://github.com/webpack/webpack/blob/5433b8cc785c6e71c29ce5f932ae6595f2d7acb5/lib/Stats.js#L335
+      .filter(d => d.moduleId !== null)
       .map(d => ({
         // again make sure to use string for id:
         graphId: d.moduleId.toString(),
@@ -410,7 +411,7 @@ function buildGraph(stats) {
       .map(parseModule)
       .filter(showModule);
 
-    const clusterDetails = parseClusterDetails(chunkIds.map(c => stats.chunks[c]));
+    const clusterDetails = parseClusterDetails(chunkIds.filter(id => stats.chunks[id]));
     const chunkCluster = createStyledCluster(graph, clusterDetails);
 
     function createModuleNode(cluster, m) {
